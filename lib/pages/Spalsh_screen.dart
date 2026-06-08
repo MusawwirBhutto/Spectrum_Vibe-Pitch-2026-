@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:baalkatwao/pages/MainNavigationPage.dart';
+import 'package:baalkatwao/pages/role_selection_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:async'; // Make sure this import is here
 
@@ -66,9 +67,7 @@ class _SplashScreenState extends State<SplashScreen>
             if (!mounted) return;
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (c) => const MainNavigationPage(initialindex: 0),
-              ),
+              MaterialPageRoute(builder: (c) => const RoleSelectionPage()),
             );
           });
         }

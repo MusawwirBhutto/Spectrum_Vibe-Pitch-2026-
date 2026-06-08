@@ -32,23 +32,25 @@ class SalonDetailPage extends StatelessWidget {
                     bottomRight: Radius.circular(30),
                   ),
                   child: (coverImageUrl != null && coverImageUrl.isNotEmpty)
-                      ? Image.network(
-                          coverImageUrl,
-                          width: double.infinity,
-                          height: 280,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: double.infinity,
-                              height: 280,
-                              color: Colors.grey.shade300,
-                              child: const Icon(
-                                Icons.store,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
-                            );
-                          },
+                      ? SafeArea(
+                          child: Image.network(
+                            coverImageUrl,
+                            width: double.infinity,
+                            height: 280,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: 280,
+                                color: Colors.grey.shade300,
+                                child: const Icon(
+                                  Icons.store,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
                         )
                       : Container(
                           width: double.infinity,
