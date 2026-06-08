@@ -1,0 +1,46 @@
+{
+  "salons": [
+    {
+      "id": "s1",
+      "name": "ABC Men's Salon",
+      "rating": 4.5,
+      "reviews": 120,
+      "distance_km": 2.0,
+      "image": "assets/salon1.png",
+      "min_price": 300,
+      "services": [
+        { "name": "Haircut", "price": 300, "duration": 30 },
+        { "name": "Beard Trim", "price": 200, "duration": 15 },
+        { "name": "Hair Color", "price": 1000, "duration": 60 }
+      ]
+    },
+    {
+      "id": "s2",
+      "name": "Style Hub Salon",
+      "rating": 4.2,
+      "reviews": 95,
+      "distance_km": 3.0,
+      "image": "assets/salon2.png",
+      "min_price": 250,
+      "services": [
+        { "name": "Haircut", "price": 250, "duration": 30 },
+        { "name": "Shaving", "price": 150, "duration": 15 },
+        { "name": "Facial", "price": 800, "duration": 45 }
+      ]
+    },
+    {
+      "id": "s3",
+      "name": "Luxury Cuts",
+      "rating": 5.0,
+      "reviews": 210,
+      "distance_km": 1.0,
+      "image": "assets/salon3.png",
+      "min_price": 500,
+      "services": [
+        { "name": "Haircut", "price": 500, "duration": 40 },
+        { "name": "Beard Styling", "price": 300, "duration": 20 },
+        { "name": "Massage", "price": 1200, "duration": 60 }
+      ]
+    }
+  ]
+}
