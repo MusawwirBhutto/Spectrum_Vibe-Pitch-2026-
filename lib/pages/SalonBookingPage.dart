@@ -1,4 +1,5 @@
 // ignore_for_file: file_names
+import 'package:baalkatwao/api_services/mockdatabase.dart';
 import 'package:baalkatwao/models/SalonModel.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,6 @@ class Salonbookingpage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<Salonbookingpage> {
-  @override
   String? selectedService;
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
@@ -51,8 +51,7 @@ class _BookingPageState extends State<Salonbookingpage> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              initialValue:
-                  selectedService, // Use value instead of initialValue
+              value: selectedService,
               hint: const Text("Choose a service"),
               items: widget.salon.services.map((service) {
                 return DropdownMenuItem<String>(
@@ -73,7 +72,7 @@ class _BookingPageState extends State<Salonbookingpage> {
                 fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none, // No border for a clean look
+                  borderSide: BorderSide.none,
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -190,7 +189,7 @@ class _BookingPageState extends State<Salonbookingpage> {
 
             const Spacer(),
 
-            // --- Confirm Button ---
+            // --- Corrected Confirm Button ---
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -198,80 +197,49 @@ class _BookingPageState extends State<Salonbookingpage> {
                     (selectedService != null &&
                         selectedDate != null &&
                         selectedTime != null)
-                    ? () {
-                        // --- Confirm Button ---
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed:
-                                (selectedService != null &&
-                                    selectedDate != null &&
-                                    selectedTime != null)
-                                ? () async {
-                                    // 1. Show Fake Loading Spinner
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) => const Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
-
-                                    // 2. Simulate Network Delay (2 seconds)
-                                    await Future.delayed(
-                                      const Duration(seconds: 2),
-                                    );
-
-                                    // 3. Save Data to our Mock Database
-                                    MockDatabase.addBooking({
-                                      "id": DateTime.now()
-                                          .millisecondsSinceEpoch
-                                          .toString(),
-                                      "salonName": widget.salon.businessName,
-                                      "customerName":
-                                          "Guest User", // Asli app mein auth se aayega
-                                      "service": selectedService,
-                                      "date":
-                                          "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
-                                      "time":
-                                          "${selectedTime!.hourOfPeriod}:${selectedTime!.minute.toString().padLeft(2, '0')} ${selectedTime!.period.name.toUpperCase()}",
-                                      "status":
-                                          "Pending", // Salon dashboard isay 'Confirmed' karega
-                                      "price": widget.service.price,
-                                    });
-
-                                    // 4. Close the Loading Spinner
-                                    if (context.mounted) Navigator.pop(context);
-
-                                    // 5. Show Success Message
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            "Booking Successful! Sent to Salon.",
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                      // 6. Go back to the previous page
-                                      Navigator.pop(context);
-                                    }
-                                  }
-                                : null,
-                            child: Text(
-                              "Confirm Booking",
-                              style: Theme.of(context).textTheme.bodyLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
-                                  ),
-                            ),
-                          ),
+                    ? () async {
+                        // 1. Show Fake Loading Spinner
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) =>
+                              const Center(child: CircularProgressIndicator()),
                         );
+
+                        // 2. Simulate Network Delay (2 seconds)
+                        await Future.delayed(const Duration(seconds: 2));
+
+                        // 3. Save Data to our Mock Database
+                        MockDatabase.addBooking({
+                          "id": DateTime.now().millisecondsSinceEpoch
+                              .toString(),
+                          "salonName": widget.salon.businessName,
+                          "customerName": "Guest User",
+                          "service": selectedService,
+                          "date":
+                              "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                          "time":
+                              "${selectedTime!.hourOfPeriod}:${selectedTime!.minute.toString().padLeft(2, '0')} ${selectedTime!.period.name.toUpperCase()}",
+                          "status": "Pending",
+                          "price": widget.service.price,
+                        });
+
+                        // 4. Close the Loading Spinner
+                        if (context.mounted) Navigator.pop(context);
+
+                        // 5. Show Success Message
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Booking Successful! Sent to Salon.",
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          // 6. Go back to the previous page
+                          Navigator.pop(context);
+                        }
                       }
                     : null,
                 child: Text(
@@ -287,17 +255,5 @@ class _BookingPageState extends State<Salonbookingpage> {
         ),
       ),
     );
-  }
-}
-
-// lib/models/dummy_database.dart
-
-class MockDatabase {
-  // Yeh static list hamara "Fake Server" hai.
-  // User yahan data daalega, aur Salon Dashboard yahan se read karega.
-  static List<Map<String, dynamic>> bookings = [];
-
-  static void addBooking(Map<String, dynamic> newBooking) {
-    bookings.add(newBooking);
   }
 }
