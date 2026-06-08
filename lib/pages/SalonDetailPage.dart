@@ -97,10 +97,12 @@ class SalonDetailPage extends StatelessWidget {
                             size: 20,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            // Fixed: Handle nullable city/address cleanly
-                            "${salon.address}, ${salon.city}",
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          Expanded(
+                            child: Text(
+                              // Fixed: Handle nullable city/address cleanly
+                              "${salon.address}, ${salon.city}",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
                         ],
                       ),

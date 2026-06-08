@@ -322,6 +322,9 @@ class _HomepageState extends State<Homepage> {
 // =========================================================================
 // MOCK DATA FUNCTION (API BYPASS)
 // =========================================================================
+// =========================================================================
+// UPDATED MOCK DATA FUNCTION (Put this in Homepage.dart)
+// =========================================================================
 Future<List<Salon>> _getMockSalons({
   required int pageNumber,
   required int pageSize,
@@ -329,17 +332,23 @@ Future<List<Salon>> _getMockSalons({
   // Realistic API delay
   await Future.delayed(const Duration(seconds: 1));
 
-  // Sirf 2 page tak data dikhayenge taake pagination real lagay
-  if (pageNumber > 1) return [];
+  // Sirf 1 page ka data dikhayenge taake pagination handle ho jaye
+  if (pageNumber > 0) return [];
 
   final List<Map<String, dynamic>> dummyData = [
     {
       "businessName": "Urban Clippers",
       "rating": 4.8,
       "reviewsCount": 124,
-      "minPrice": 800,
+      "minPrice": 800.0,
+      "address": "Shop 4, Phase 6 DHA",
+      "city": "Karachi",
+      "about":
+          "Premium men's grooming salon offering top-notch haircuts, beard styling, and facials with modern aesthetics. Experience the best grooming in town.",
       "services": [
-        {"name": "Haircut"},
+        {"serviceName": "Classic Haircut", "price": 800.0},
+        {"serviceName": "Beard Styling", "price": 400.0},
+        {"serviceName": "Charcoal Facial", "price": 1200.0},
       ],
       "photos": [
         {
@@ -352,10 +361,14 @@ Future<List<Salon>> _getMockSalons({
       "businessName": "The Fade Studio",
       "rating": 4.5,
       "reviewsCount": 89,
-      "minPrice": 1200,
+      "minPrice": 1000.0,
+      "address": "Block 4, Clifton",
+      "city": "Karachi",
+      "about":
+          "Specializing in modern fades, tapers, and sharp line-ups. A highly energetic environment for the modern gentleman.",
       "services": [
-        {"name": "Haircut"},
-        {"name": "Beard"},
+        {"serviceName": "Skin Fade Haircut", "price": 1000.0},
+        {"serviceName": "Hair Color / Highlights", "price": 2500.0},
       ],
       "photos": [
         {
@@ -368,9 +381,15 @@ Future<List<Salon>> _getMockSalons({
       "businessName": "Style Lounge",
       "rating": 4.2,
       "reviewsCount": 45,
-      "minPrice": 500,
+      "minPrice": 500.0,
+      "address": "Main Tariq Road",
+      "city": "Karachi",
+      "about":
+          "Your everyday friendly neighborhood salon providing quick, affordable, and clean grooming services.",
       "services": [
-        {"name": "Trimming"},
+        {"serviceName": "Regular Haircut", "price": 500.0},
+        {"serviceName": "Shave", "price": 250.0},
+        {"serviceName": "Head Massage", "price": 300.0},
       ],
       "photos": [
         {
@@ -382,15 +401,14 @@ Future<List<Salon>> _getMockSalons({
   ];
 
   try {
-    // DEVELOPER NOTE: Agar tumhare SalonModel mein fromJson ki jagah fromMap hai,
+    // DEVELOPER NOTE: Agar tumhara SalonModel 'fromJson' ki jagah 'fromMap' use karta hai,
     // toh neechay .fromJson ki jagah .fromMap likh dena.
     return dummyData.map((data) => Salon.fromJson(data)).toList();
   } catch (e) {
-    debugPrint("Mock Data Error (Please check SalonModel constructor): $e");
+    debugPrint("Mock Data Error: $e");
     return [];
   }
 }
-
 // =========================================================================
 // REUSABLE CLASS: HORIZONTAL INFINITE SECTION
 // =========================================================================
@@ -512,49 +530,60 @@ class _HorizontalInfiniteSectionState extends State<HorizontalInfiniteSection> {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 2,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
-                child: (imgUrl != null && imgUrl.isNotEmpty)
-                    ? Image.network(
-                        imgUrl,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (c, e, s) => Container(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SalonDetailPage(salon: salon),
+              ),
+            );
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
+                  ),
+                  child: (imgUrl != null && imgUrl.isNotEmpty)
+                      ? Image.network(
+                          imgUrl,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (c, e, s) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.broken_image),
+                          ),
+                        )
+                      : Container(
                           color: Colors.grey.shade200,
-                          child: const Icon(Icons.broken_image),
+                          child: const Icon(Icons.store),
                         ),
-                      )
-                    : Container(
-                        color: Colors.grey.shade200,
-                        child: const Icon(Icons.store),
-                      ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    salon.businessName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "${salon.rating} ⭐",
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      salon.businessName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "${salon.rating} ⭐",
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
